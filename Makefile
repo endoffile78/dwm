@@ -17,10 +17,13 @@ options:
 .c.o:
 	${CC} -c ${CFLAGS} $<
 
-${OBJ}: config.h config.mk
+${OBJ}: local.h config.h config.mk
 
 config.h:
 	cp config.def.h $@
+
+local.h:
+	cat local.def.h | sed s/0/$(shell xrandr --query | grep " connected" | wc -l)/ > $@
 
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
